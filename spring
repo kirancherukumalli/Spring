@@ -1,0 +1,140 @@
+package com.example.sms;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.example.sms.entity.*;
+import com.example.sms.repository.StudentRepository;
+
+@SpringBootApplication
+public class StudentmanagementsystemApplication implements CommandLineRunner {
+
+	public static void main(String[] args) {
+	SpringApplication.run(StudentmanagementsystemApplication.class, args);
+	
+	}
+	@Autowired
+	private StudentRepository studentRepository;
+	
+	@Override  
+	public void run(String... args) throws Exception {
+		
+	  Student student1= new Student("saikiran","chowdary","saikiran123@gmail.com");
+	  studentRepository.save(student1);
+	  
+	  Student student2= new Student("gopi","pothinani","saigopi@gmail.com");
+	  studentRepository.save(student2);
+	  
+	  Student student3= new Student("ram","vadla","ram8593@gmail.com");
+	  studentRepository.save(student3);	  
+	  
+	  
+	}
+	
+	
+
+}
+package com.example.sms.entity;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name="students")
+public class Student {
+	@Id 
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+private Long id;
+	@Column(name="first_name",nullable=false)
+private String firstName;
+	@Column(name="last_name")
+private String lastName;
+	@Column(name="email")
+private String email;
+public Long getId() {
+	return id;
+}
+public Student(String firstName, String lastName, String email) {
+	super();
+	this.firstName = firstName;
+	this.lastName = lastName;
+	this.email = email;
+}
+public void setId(Long id) {
+	this.id = id;
+}
+public String getFirstName() {
+	return firstName;
+}
+public void setFirstName(String firstName) {
+	this.firstName = firstName;
+}
+public String getLastName() {
+	return lastName;
+}
+public void setLastName(String lastName) {
+	this.lastName = lastName;
+}
+public String getEmail() {
+	return email;
+}
+public void setEmail(String email) {
+	this.email = email;
+}
+public Student() {
+}
+}
+
+
+#Repository--Interface
+package com.example.sms.repository;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.sms.entity.Student;
+
+public interface StudentRepository extends JpaRepository<Student,Long>{
+
+}
+#Service
+package com.example.sms.service;
+import java.util.List;
+
+import com.example.sms.entity.Student;
+
+public interface StudentService {
+	List<Student> getAllStudents();
+
+#Implementation cls
+package com.example.sms.service.Impl;
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.example.sms.entity.Student;
+import com.example.sms.repository.StudentRepository;
+import com.example.sms.service.StudentService;
+@Service
+public class StudentServiceImpl implements StudentService{
+	
+	private StudentRepository studentRepository;
+	
+	
+
+	public StudentServiceImpl(StudentRepository studentRepository) {
+		super();
+		this.studentRepository = studentRepository;
+	}
+
+
+
+	@Override
+	public List<Student> getAllStudents() {
+		return studentRepository.findAll();
+	}
+}
